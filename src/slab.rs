@@ -11,13 +11,13 @@ impl Index {
 
 #[derive(Debug)]
 pub(crate) struct Slab<T> {
-    slab: slab::Slab<T>,
+    slab: slab_tokio::Slab<T>,
 }
 
 impl<T> Slab<T> {
     pub(crate) fn new(capacity: usize) -> Self {
         Self {
-            slab: slab::Slab::with_capacity(capacity),
+            slab: slab_tokio::Slab::with_capacity(capacity),
         }
     }
 

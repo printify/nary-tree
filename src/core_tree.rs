@@ -1,5 +1,5 @@
 use crate::node::Node;
-use crate::slab::Slab;
+use crate::slab::{self, Slab};
 use crate::NodeId;
 use snowflake::ProcessUniqueId;
 
@@ -47,7 +47,7 @@ impl<T> CoreTree<T> {
             .and_then(move |id| self.slab.get_mut(id.index))
     }
 
-    fn new_node_id(&self, index: crate::slab::Index) -> NodeId {
+    fn new_node_id(&self, index: slab::Index) -> NodeId {
         NodeId {
             tree_id: self.id,
             index,

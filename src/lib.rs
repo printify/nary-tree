@@ -69,6 +69,8 @@
 //! * Comparison-based node insertion of any kind
 //!
 
+extern crate slab as slab_tokio;
+
 pub mod behaviors;
 mod core_tree;
 pub mod iter;
@@ -92,5 +94,5 @@ use snowflake::ProcessUniqueId;
 #[derive(Copy, Clone, PartialEq, PartialOrd, Eq, Ord, Debug, Hash)]
 pub struct NodeId {
     tree_id: ProcessUniqueId,
-    index: crate::slab::Index,
+    index: slab::Index,
 }
