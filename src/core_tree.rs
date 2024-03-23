@@ -1,5 +1,4 @@
 use crate::node::Node;
-use crate::slab;
 use crate::NodeId;
 use snowflake::ProcessUniqueId;
 
@@ -8,7 +7,7 @@ use snowflake::ProcessUniqueId;
 ///
 /// Groups a collection of Node<T>s with a process unique id.
 ///
-#[derive(Debug, PartialEq)]
+#[derive(Debug)]
 pub(crate) struct CoreTree<T> {
     id: ProcessUniqueId,
     slab: slab::Slab<Node<T>>,
@@ -18,7 +17,7 @@ impl<T> CoreTree<T> {
     pub(crate) fn new(capacity: usize) -> CoreTree<T> {
         CoreTree {
             id: ProcessUniqueId::new(),
-            slab: slab::Slab::new(capacity),
+            slab: slab::Slab::with_capacity(capacity),
         }
     }
 
@@ -33,7 +32,7 @@ impl<T> CoreTree<T> {
 
     pub(crate) fn remove(&mut self, node_id: NodeId) -> Option<T> {
         self.filter_by_tree_id(node_id)
-            .and_then(|id| self.slab.remove(id.index))
+            .and_then(|id| self.slab.try_remove(id.index))
             .map(|node| node.data)
     }
 
@@ -47,7 +46,7 @@ impl<T> CoreTree<T> {
             .and_then(move |id| self.slab.get_mut(id.index))
     }
 
-    fn new_node_id(&self, index: slab::Index) -> NodeId {
+    fn new_node_id(&self, index: usize) -> NodeId {
         NodeId {
             tree_id: self.id,
             index,

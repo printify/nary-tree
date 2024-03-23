@@ -7,7 +7,7 @@ use crate::NodeId;
 ///
 /// A mutable reference to a given `Node`'s data and its relatives.
 ///
-#[derive(Debug, PartialEq)]
+#[derive(Debug)]
 pub struct NodeMut<'a, T> {
     node_id: NodeId,
     tree: &'a mut Tree<T>,

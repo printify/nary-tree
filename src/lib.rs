@@ -73,7 +73,6 @@ pub mod behaviors;
 mod core_tree;
 pub mod iter;
 pub mod node;
-mod slab;
 pub mod tree;
 
 pub use crate::behaviors::RemoveBehavior;
@@ -92,5 +91,5 @@ use snowflake::ProcessUniqueId;
 #[derive(Copy, Clone, PartialEq, PartialOrd, Eq, Ord, Debug, Hash)]
 pub struct NodeId {
     tree_id: ProcessUniqueId,
-    index: slab::Index,
+    index: usize,
 }
