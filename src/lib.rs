@@ -92,5 +92,5 @@ use snowflake::ProcessUniqueId;
 #[derive(Copy, Clone, PartialEq, PartialOrd, Eq, Ord, Debug, Hash)]
 pub struct NodeId {
     tree_id: ProcessUniqueId,
-    index: usize,
+    index: crate::slab::Index,
 }

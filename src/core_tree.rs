@@ -47,7 +47,7 @@ impl<T> CoreTree<T> {
             .and_then(move |id| self.slab.get_mut(id.index))
     }
 
-    fn new_node_id(&self, index: usize) -> NodeId {
+    fn new_node_id(&self, index: crate::slab::Index) -> NodeId {
         NodeId {
             tree_id: self.id,
             index,
