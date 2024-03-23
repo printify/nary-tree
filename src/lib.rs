@@ -73,6 +73,7 @@ pub mod behaviors;
 mod core_tree;
 pub mod iter;
 pub mod node;
+mod slab;
 pub mod tree;
 
 pub use crate::behaviors::RemoveBehavior;

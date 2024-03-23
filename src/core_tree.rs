@@ -1,4 +1,5 @@
 use crate::node::Node;
+use crate::slab::Slab;
 use crate::NodeId;
 use snowflake::ProcessUniqueId;
 
@@ -10,14 +11,14 @@ use snowflake::ProcessUniqueId;
 #[derive(Debug)]
 pub(crate) struct CoreTree<T> {
     id: ProcessUniqueId,
-    slab: slab::Slab<Node<T>>,
+    slab: Slab<Node<T>>,
 }
 
 impl<T> CoreTree<T> {
     pub(crate) fn new(capacity: usize) -> CoreTree<T> {
         CoreTree {
             id: ProcessUniqueId::new(),
-            slab: slab::Slab::with_capacity(capacity),
+            slab: Slab::new(capacity),
         }
     }
 
