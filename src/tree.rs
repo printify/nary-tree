@@ -342,6 +342,55 @@ impl<T> Tree<T> {
         }
     }
 
+    /// Shrink the capacity of the slab_tree as much as possible without invalidating
+    /// keys.
+    ///
+    /// Because values cannot be moved to a different index, the slab cannot
+    /// shrink past any stored values.
+    /// It will drop down as close as possible to the length but the allocator may
+    /// still inform the underlying vector that there is space for a few more elements.
+    ///
+    /// This function can take O(n) time even when the capacity cannot be reduced
+    /// or the allocation is shrunk in place. Repeated calls run in O(1) though.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use slab_tree::*;
+    /// let mut tree = TreeBuilder::new().with_root(0).with_capacity(10).build();
+    /// let mut root = tree.root_mut().unwrap();
+    ///
+    /// for i in 1..4 {
+    ///     root.append(i);
+    /// }
+    ///
+    /// tree.shrink_to_fit();
+    /// assert!(tree.capacity() >= 4 && tree.capacity() < 10);
+    /// ```
+    ///
+    /// The slab_tree cannot shrink past the last present value even if previous
+    /// values are removed:
+    ///
+    /// ```
+    /// # use slab_tree::*;
+    /// let mut tree = TreeBuilder::new().with_root(0).with_capacity(10).build();
+    /// let mut root = tree.root_mut().unwrap();
+    ///
+    /// let mut node_ids = vec![root.node_id()];
+    /// for i in 1..4 {
+    ///     node_ids.push(root.append(i).node_id());
+    /// }
+    ///
+    /// tree.remove(node_ids[1], slab_tree::RemoveBehavior::OrphanChildren);
+    /// tree.remove(node_ids[3], slab_tree::RemoveBehavior::OrphanChildren);
+    ///
+    /// tree.shrink_to_fit();
+    /// assert!(tree.capacity() >= 3 && tree.capacity() < 10);
+    /// ```
+    pub fn shrink_to_fit(&mut self) {
+        self.core_tree.shrink_to_fit();
+    }
+
     pub(crate) fn get_node(&self, node_id: NodeId) -> Option<&Node<T>> {
         self.core_tree.get(node_id)
     }
@@ -809,5 +858,30 @@ mod tree_tests {
 
         let five = five.unwrap();
         assert_eq!(five.relatives.parent, None);
+    }
+
+    #[test]
+    fn shrink_to_fit() {
+        let mut tree = TreeBuilder::new().with_root(0).with_capacity(10).build();
+        let mut root = tree.root_mut().unwrap();
+        for i in 1..4 {
+            root.append(i);
+        }
+        tree.shrink_to_fit();
+        assert!(tree.capacity() >= 4 && tree.capacity() < 10);
+    }
+
+    #[test]
+    fn shrink_to_fit_with_remove() {
+        let mut tree = TreeBuilder::new().with_root(0).with_capacity(10).build();
+        let mut root = tree.root_mut().unwrap();
+        let mut node_ids = vec![root.node_id()];
+        for i in 1..4 {
+            node_ids.push(root.append(i).node_id());
+        }
+        tree.remove(node_ids[1], RemoveBehavior::OrphanChildren);
+        tree.remove(node_ids[3], RemoveBehavior::OrphanChildren);
+        tree.shrink_to_fit();
+        assert!(tree.capacity() >= 3 && tree.capacity() < 10);
     }
 }

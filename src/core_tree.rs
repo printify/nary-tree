@@ -60,6 +60,10 @@ impl<T> CoreTree<T> {
         }
         Some(node_id)
     }
+
+    pub(crate) fn shrink_to_fit(&mut self) {
+        self.slab.shrink_to_fit();
+    }
 }
 
 #[cfg_attr(tarpaulin, skip)]
