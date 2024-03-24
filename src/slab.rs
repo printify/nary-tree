@@ -1,6 +1,6 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub(crate) struct Index {
-    index: usize,
+    pub(crate) index: usize,
     generation: usize,
 }
 
@@ -54,7 +54,7 @@ impl<T> Slab<T> {
             }
         }
         self.slab.try_remove(index.index).map(|entry| {
-            self.generation += 1;
+            self.next_generation();
             entry.data
         })
     }
@@ -83,6 +83,24 @@ impl<T> Slab<T> {
 
     pub(crate) fn shrink_to_fit(&mut self) {
         self.slab.shrink_to_fit();
+    }
+
+    #[cfg(feature = "experimental")]
+    pub(crate) fn compact<F>(&mut self, mut rekey: F)
+    where
+        F: FnMut(usize, Index),
+    {
+        let generation = self.next_generation();
+        self.slab.compact(|node, from, to| {
+            node.generation = generation;
+            rekey(from, Index::new(to, generation));
+            true
+        });
+    }
+
+    fn next_generation(&mut self) -> usize {
+        self.generation += 1;
+        self.generation
     }
 }
 

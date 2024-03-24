@@ -391,6 +391,73 @@ impl<T> Tree<T> {
         self.core_tree.shrink_to_fit();
     }
 
+    #[cfg(feature = "experimental")]
+    /// Reduce the capacity as much as possible by moving `Node`s from the back of the slab to
+    /// empty slots, updating the index for elements when necessary.
+    /// This will increase the generation of all moved `Node`s, making obsolete the `NodeId`s
+    /// pointing to the old index.
+    ///
+    /// ```
+    /// # use slab_tree::*;
+    /// let mut tree = TreeBuilder::new().with_root(0).build();
+    /// let mut root = tree.root_mut().unwrap();
+    /// {
+    ///     let mut one = root.append(1);
+    ///     let mut two = one.append(2);
+    ///     two.append(3);
+    ///     two.append(4);
+    /// }
+    /// {
+    ///     let mut five = root.append(5);
+    ///     five.append(6).append(7);
+    ///     five.append(8);
+    /// }
+    ///
+    /// // 0
+    /// // ├── 1
+    /// // │   └── 2
+    /// // │       ├── 3
+    /// // │       └── 4
+    /// // ├── 5
+    /// // │   ├── 6
+    /// // │   │   └── 7
+    /// // │   └── 8
+    ///
+    /// let three_id = tree.find(&3).unwrap()[0];
+    /// let five_id = tree.find(&5).unwrap()[0];
+    ///
+    /// tree.remove(three_id, RemoveBehavior::DropChildren);
+    /// tree.remove(five_id, RemoveBehavior::DropChildren);
+    ///
+    /// // 0
+    /// // └── 1
+    /// //     └── 2
+    /// //         └── 4
+    ///
+    /// let two = tree.get(tree.find(&2).unwrap()[0]).unwrap();
+    /// assert_eq!(two.first_child().unwrap().data(), &4);
+    ///
+    /// let four = tree.get(tree.find(&4).unwrap()[0]).unwrap();
+    /// assert!(four.prev_sibling().is_none());
+    /// assert_eq!(tree.root().unwrap().last_child().unwrap().data(), &1);
+    ///
+    /// assert!(tree.capacity() >= 9);
+    ///
+    /// tree.compact();
+    ///
+    /// let two = tree.get(tree.find(&2).unwrap()[0]).unwrap();
+    /// assert_eq!(two.first_child().unwrap().data(), &4);
+    ///
+    /// let four = tree.get(tree.find(&4).unwrap()[0]).unwrap();
+    /// assert!(four.prev_sibling().is_none());
+    /// assert_eq!(tree.root().unwrap().last_child().unwrap().data(), &1);
+    ///
+    /// assert!(tree.capacity() == 4);
+    /// ```
+    pub fn compact(&mut self) -> usize {
+        self.core_tree.compact()
+    }
+
     pub(crate) fn get_node(&self, node_id: NodeId) -> Option<&Node<T>> {
         self.core_tree.get(node_id)
     }
@@ -1012,5 +1079,72 @@ mod tree_tests {
         let tree = TreeBuilder::new().build();
         let matches = tree.find(&6);
         assert!(matches.is_none());
+    }
+
+    #[cfg(feature = "experimental")]
+    #[test]
+    fn compact_empty_tree() {
+        let mut tree: Tree<i32> = TreeBuilder::new().with_capacity(10).build();
+        assert_eq!(tree.capacity(), 10);
+        assert_eq!(tree.compact(), 0);
+    }
+
+    #[cfg(feature = "experimental")]
+    #[test]
+    fn compact_tree() {
+        let mut tree = TreeBuilder::new().with_root(0).build();
+        let mut root = tree.root_mut().unwrap();
+        {
+            let mut one = root.append(1);
+            let mut two = one.append(2);
+            two.append(3);
+            two.append(4);
+        }
+        {
+            let mut five = root.append(5);
+            five.append(6).append(7);
+            five.append(8);
+        }
+
+        // 0
+        // ├── 1
+        // │   └── 2
+        // │       ├── 3
+        // │       └── 4
+        // ├── 5
+        // │   ├── 6
+        // │   │   └── 7
+        // │   └── 8
+
+        let three_id = tree.find(&3).unwrap()[0];
+        let five_id = tree.find(&5).unwrap()[0];
+
+        tree.remove(three_id, RemoveBehavior::DropChildren);
+        tree.remove(five_id, RemoveBehavior::DropChildren);
+
+        // 0
+        // └── 1
+        //     └── 2
+        //         └── 4
+
+        let two = tree.get(tree.find(&2).unwrap()[0]).unwrap();
+        assert_eq!(two.first_child().unwrap().data(), &4);
+
+        let four = tree.get(tree.find(&4).unwrap()[0]).unwrap();
+        assert!(four.prev_sibling().is_none());
+        assert_eq!(tree.root().unwrap().last_child().unwrap().data(), &1);
+
+        assert!(tree.capacity() >= 9);
+
+        tree.compact();
+
+        let two = tree.get(tree.find(&2).unwrap()[0]).unwrap();
+        assert_eq!(two.first_child().unwrap().data(), &4);
+
+        let four = tree.get(tree.find(&4).unwrap()[0]).unwrap();
+        assert!(four.prev_sibling().is_none());
+        assert_eq!(tree.root().unwrap().last_child().unwrap().data(), &1);
+
+        assert!(tree.capacity() == 4);
     }
 }
