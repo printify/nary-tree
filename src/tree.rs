@@ -541,6 +541,58 @@ impl<T> Tree<T> {
     }
 }
 
+impl<T: PartialEq> Tree<T> {
+    /// Find all the `Node`s that contain data and return a `Some`-Vec of their `NodeId`s
+    /// or `None` if none found.
+    /// ```
+    /// # use slab_tree::*;
+    /// let mut tree = TreeBuilder::new().with_root(0).build();
+    /// let mut root = tree.root_mut().unwrap();
+    /// {
+    ///     let mut one = root.append(1);
+    ///     let mut two = one.append(2);
+    ///     two.append(3);
+    ///     two.append(4);
+    /// }
+    /// {
+    ///     let mut five = root.append(5);
+    ///     five.append(6).append(7);
+    ///     five.append(8);
+    /// }
+    /// root.append(9);
+    ///
+    /// // 0
+    /// // ├── 1
+    /// // │   └── 2
+    /// // │       ├── 3
+    /// // │       └── 4
+    /// // ├── 5
+    /// // │   ├── 6
+    /// // │   │   └── 7
+    /// // │   └── 8
+    /// // └── 9
+    ///
+    /// let matches = tree.find(&6).unwrap();
+    /// assert_eq!(matches.len(), 1);
+    /// assert_eq!(tree.get(matches[0]).unwrap().data(), &6);
+    /// ```
+    pub fn find(&self, data: &T) -> Option<Vec<NodeId>> {
+        let mut matches = Vec::with_capacity(1);
+        if let Some(root) = self.root() {
+            for node in root.traverse_level_order() {
+                if node.data() == data {
+                    matches.push(node.node_id());
+                }
+            }
+        }
+        if matches.len() == 0 {
+            None
+        } else {
+            Some(matches)
+        }
+    }
+}
+
 impl<T> Default for Tree<T> {
     fn default() -> Self {
         TreeBuilder::new().build()
@@ -883,5 +935,82 @@ mod tree_tests {
         tree.remove(node_ids[3], RemoveBehavior::OrphanChildren);
         tree.shrink_to_fit();
         assert!(tree.capacity() >= 3 && tree.capacity() < 10);
+    }
+
+    #[test]
+    fn find_data() {
+        let mut tree = TreeBuilder::new().with_root(0).build();
+        let mut root = tree.root_mut().unwrap();
+        {
+            let mut one = root.append(1);
+            let mut two = one.append(2);
+            two.append(3);
+            two.append(4);
+        }
+        {
+            let mut five = root.append(5);
+            five.append(6).append(7);
+            five.append(8);
+        }
+        root.append(9);
+
+        // 0
+        // ├── 1
+        // │   └── 2
+        // │       ├── 3
+        // │       └── 4
+        // ├── 5
+        // │   ├── 6
+        // │   │   └── 7
+        // │   └── 8
+        // └── 9
+
+        let matches = tree.find(&6).unwrap();
+        assert_eq!(matches.len(), 1);
+        assert_eq!(tree.get(matches[0]).unwrap().data(), &6);
+    }
+
+    #[test]
+    fn find_removed_data() {
+        let mut tree = TreeBuilder::new().with_root(0).build();
+        let mut root = tree.root_mut().unwrap();
+        {
+            let mut one = root.append(1);
+            let mut two = one.append(2);
+            two.append(3);
+            two.append(4);
+        }
+        {
+            let mut five = root.append(5);
+            five.append(6).append(7);
+            five.append(8);
+        }
+        root.append(9);
+
+        // 0
+        // ├── 1
+        // │   └── 2
+        // │       ├── 3
+        // │       └── 4
+        // ├── 5
+        // │   ├── 6
+        // │   │   └── 7
+        // │   └── 8
+        // └── 9
+
+        let matches = tree.find(&6).unwrap();
+        assert_eq!(matches.len(), 1);
+        assert_eq!(tree.get(matches[0]).unwrap().data(), &6);
+
+        tree.remove(matches[0], RemoveBehavior::DropChildren);
+        let matches = tree.find(&6);
+        assert!(matches.is_none());
+    }
+
+    #[test]
+    fn find_empty_tree() {
+        let tree = TreeBuilder::new().build();
+        let matches = tree.find(&6);
+        assert!(matches.is_none());
     }
 }
