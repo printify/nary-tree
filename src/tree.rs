@@ -652,7 +652,7 @@ impl<T: PartialEq> Tree<T> {
                 }
             }
         }
-        if matches.len() == 0 {
+        if matches.is_empty() {
             None
         } else {
             Some(matches)

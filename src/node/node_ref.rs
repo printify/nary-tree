@@ -278,7 +278,7 @@ impl<'a, T> NodeRef<'a, T> {
 
     fn get_self_as_node(&self) -> &Node<T> {
         if let Some(node) = self.tree.get_node(self.node_id) {
-            &node
+            node
         } else {
             unreachable!()
         }

@@ -212,7 +212,7 @@ impl<'a, T> NodeMut<'a, T> {
         self.tree.set_parent(new_id, Some(self.node_id));
         self.tree.set_prev_sibling(new_id, prev_sibling);
 
-        let first_child = relatives.first_child.or_else(|| Some(new_id));
+        let first_child = relatives.first_child.or(Some(new_id));
         self.tree.set_first_child(self.node_id, first_child);
         self.tree.set_last_child(self.node_id, Some(new_id));
 
@@ -256,7 +256,7 @@ impl<'a, T> NodeMut<'a, T> {
         self.tree.set_parent(new_id, Some(self.node_id));
         self.tree.set_next_sibling(new_id, next_sibling);
 
-        let last_child = relatives.last_child.or_else(|| Some(new_id));
+        let last_child = relatives.last_child.or(Some(new_id));
         self.tree.set_first_child(self.node_id, Some(new_id));
         self.tree.set_last_child(self.node_id, last_child);
 
@@ -721,7 +721,7 @@ impl<'a, T> NodeMut<'a, T> {
 
     fn get_self_as_node(&self) -> &Node<T> {
         if let Some(node) = self.tree.get_node(self.node_id) {
-            &node
+            node
         } else {
             unreachable!()
         }
