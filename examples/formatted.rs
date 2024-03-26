@@ -18,7 +18,14 @@ fn main() {
     }
     root.append(9);
 
-    let mut s = String::new();
+    // Find the first node that contains 5 via traverse level order
+    let found = root
+        .as_ref()
+        .traverse_level_order()
+        .find(|n| n.data() == &5);
+    assert!(found.is_some());
+    assert_eq!(found.unwrap().data(), &5);
+
     // 0
     // ├── 1
     // │   └── 2
@@ -29,6 +36,6 @@ fn main() {
     // │   │   └── 7
     // │   └── 8
     // └── 9
-    tree.write_formatted(&mut s).unwrap();
-    print!("{}", s);
+
+    print!("{}", tree);
 }
