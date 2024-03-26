@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use crate::behaviors::*;
 use crate::core_tree::CoreTree;
 use crate::node::*;
@@ -666,7 +668,7 @@ impl<T> Default for Tree<T> {
     }
 }
 
-impl<T: std::fmt::Debug> Tree<T> {
+impl<T: std::fmt::Display> Tree<T> {
     /// Write formatted tree representation and nodes with debug formatting.
     ///
     /// Example:
@@ -730,7 +732,7 @@ impl<T: std::fmt::Debug> Tree<T> {
                             write!(w, "├── ")?;
                         }
                     }
-                    writeln!(w, "{:?}", node.data())?;
+                    writeln!(w, "{}", node.data())?;
                 }
                 let mut children = node.children().skip(childn);
                 if let Some(child) = children.next() {
@@ -747,43 +749,11 @@ impl<T: std::fmt::Debug> Tree<T> {
         }
         Ok(())
     }
+}
 
-    /// Returns `String` with formatted tree representation and nodes with debug
-    /// formatting.
-    ///
-    /// Example:
-    ///
-    /// ```
-    /// use slab_tree::tree::TreeBuilder;
-    ///
-    /// let mut tree = TreeBuilder::new().with_root(0).build();
-    /// let mut root = tree.root_mut().unwrap();
-    /// root.append(1)
-    ///     .append(2);
-    /// root.append(3);
-    /// let s = tree.as_formatted_string();
-    /// assert_eq!(&s, "\
-    /// 0
-    /// ├── 1
-    /// │   └── 2
-    /// └── 3
-    /// ");
-    /// ```
-    ///
-    /// Returns empty `String` if the tree is empty.
-    ///
-    /// ```
-    /// use slab_tree::tree::TreeBuilder;
-    ///
-    /// let tree = TreeBuilder::<i32>::new().build();
-    /// let s = tree.as_formatted_string();
-    /// assert_eq!(&s, "");
-    /// ```
-    pub fn as_formatted_string(&self) -> String {
-        let mut s = String::new();
-        self.write_formatted(&mut s)
-            .expect("String shouldn't fail write!()");
-        s
+impl<T: Display> Display for Tree<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.write_formatted(f)
     }
 }
 

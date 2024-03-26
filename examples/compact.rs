@@ -1,4 +1,4 @@
-
+use slab_tree::{RemoveBehavior, TreeBuilder};
 
 fn main() {
     #[cfg(feature = "experimental")]
@@ -17,7 +17,7 @@ fn main() {
             five.append(8);
         }
 
-        println!("{}", tree.as_formatted_string());
+        println!("{}", tree);
 
         // 0
         // ├── 1
@@ -35,7 +35,7 @@ fn main() {
         tree.remove(three_id, RemoveBehavior::DropChildren);
         tree.remove(five_id, RemoveBehavior::DropChildren);
 
-        println!("{}", tree.as_formatted_string());
+        println!("{}", tree);
 
         // 0
         // └── 1
@@ -53,7 +53,7 @@ fn main() {
 
         tree.compact();
 
-        println!("{}", tree.as_formatted_string());
+        println!("{}", tree);
 
         let two = tree.get(tree.find(&2).unwrap()[0]).unwrap();
         assert_eq!(two.first_child().unwrap().data(), &4);
