@@ -1,8 +1,8 @@
-use slab_tree::{RemoveBehavior, TreeBuilder};
-
 fn main() {
     #[cfg(feature = "experimental")]
     {
+        use slab_tree::{RemoveBehavior, TreeBuilder};
+
         let mut tree = TreeBuilder::new().with_root(0).build();
         let mut root = tree.root_mut().unwrap();
         {
