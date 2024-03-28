@@ -29,7 +29,7 @@ This crate uses `#![forbid(unsafe_code)]` to prevent any and all `unsafe` code u
 
 ## Example Usage
 ```rust
-use slab_tree::*;
+use nary_tree::*;
 
 fn main() {
 
