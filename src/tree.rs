@@ -24,7 +24,7 @@ impl<T> TreeBuilder<T> {
     /// Creates a new `TreeBuilder` with the default settings.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let _tree_builder = TreeBuilder::new();
     ///
@@ -42,7 +42,7 @@ impl<T> TreeBuilder<T> {
     /// Sets the root `Node` of the `TreeBuilder`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let _tree_builder = TreeBuilder::new().with_root(1);
     /// ```
@@ -61,7 +61,7 @@ impl<T> TreeBuilder<T> {
     /// number of `Node`s to the `Tree`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let _tree_builder = TreeBuilder::new().with_capacity(10);
     ///
@@ -79,7 +79,7 @@ impl<T> TreeBuilder<T> {
     /// Build a `Tree` based upon the current settings in the `TreeBuilder`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let _tree = TreeBuilder::new().with_root(1).with_capacity(10).build();
     /// ```
@@ -107,7 +107,7 @@ impl<T> Tree<T> {
     /// Creates a new `Tree` with a capacity of 0.
     ///
     /// ```
-    /// use slab_tree::tree::Tree;
+    /// use nary_tree::tree::Tree;
     ///
     /// let tree: Tree<i32> = Tree::new();
     ///
@@ -126,7 +126,7 @@ impl<T> Tree<T> {
     /// one takes its place.
     ///
     /// ```
-    /// use slab_tree::tree::Tree;
+    /// use nary_tree::tree::Tree;
     ///
     /// let mut tree = Tree::new();
     ///
@@ -156,7 +156,7 @@ impl<T> Tree<T> {
     /// `Node`s can be added to the `Tree` before it must allocate more memory.
     ///
     /// ```
-    /// use slab_tree::tree::Tree;
+    /// use nary_tree::tree::Tree;
     ///
     /// let tree: Tree<i32> = Tree::new();
     ///
@@ -171,7 +171,7 @@ impl<T> Tree<T> {
     /// Returns the `NodeId` of the root node of the `Tree`.
     ///
     /// ```
-    /// use slab_tree::tree::Tree;
+    /// use nary_tree::tree::Tree;
     ///
     /// let mut tree = Tree::new();
     /// tree.set_root(1);
@@ -189,7 +189,7 @@ impl<T> Tree<T> {
     /// Returns a `NodeRef` pointing to the root `Node` of the `Tree`.
     ///
     /// ```
-    /// use slab_tree::tree::Tree;
+    /// use nary_tree::tree::Tree;
     ///
     /// let mut tree = Tree::new();
     /// tree.set_root(1);
@@ -207,7 +207,7 @@ impl<T> Tree<T> {
     /// Returns a `NodeMut` pointing to the root `Node` of the `Tree`.
     ///
     /// ```
-    /// use slab_tree::tree::Tree;
+    /// use nary_tree::tree::Tree;
     ///
     /// let mut tree = Tree::new();
     /// tree.set_root(1);
@@ -229,7 +229,7 @@ impl<T> Tree<T> {
     /// will be returned; otherwise, a `Some`-value will be returned.
     ///
     /// ```
-    /// use slab_tree::tree::Tree;
+    /// use nary_tree::tree::Tree;
     ///
     /// let mut tree = Tree::new();
     /// tree.set_root(1);
@@ -253,7 +253,7 @@ impl<T> Tree<T> {
     /// will be returned; otherwise, a `Some`-value will be returned.
     ///
     /// ```
-    /// use slab_tree::tree::Tree;
+    /// use nary_tree::tree::Tree;
     ///
     /// let mut tree = Tree::new();
     /// tree.set_root(1);
@@ -281,8 +281,8 @@ impl<T> Tree<T> {
     /// `OrphanChildren`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
-    /// use slab_tree::behaviors::RemoveBehavior::*;
+    /// use nary_tree::tree::TreeBuilder;
+    /// use nary_tree::behaviors::RemoveBehavior::*;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let two_id = {
@@ -344,7 +344,7 @@ impl<T> Tree<T> {
         }
     }
 
-    /// Shrink the capacity of the slab_tree as much as possible without invalidating
+    /// Shrink the capacity of the nary_tree as much as possible without invalidating
     /// keys.
     ///
     /// Because values cannot be moved to a different index, the slab cannot
@@ -358,7 +358,7 @@ impl<T> Tree<T> {
     /// # Examples
     ///
     /// ```
-    /// # use slab_tree::*;
+    /// # use nary_tree::*;
     /// let mut tree = TreeBuilder::new().with_root(0).with_capacity(10).build();
     /// let mut root = tree.root_mut().unwrap();
     ///
@@ -370,11 +370,11 @@ impl<T> Tree<T> {
     /// assert!(tree.capacity() >= 4 && tree.capacity() < 10);
     /// ```
     ///
-    /// The slab_tree cannot shrink past the last present value even if previous
+    /// The nary_tree cannot shrink past the last present value even if previous
     /// values are removed:
     ///
     /// ```
-    /// # use slab_tree::*;
+    /// # use nary_tree::*;
     /// let mut tree = TreeBuilder::new().with_root(0).with_capacity(10).build();
     /// let mut root = tree.root_mut().unwrap();
     ///
@@ -383,8 +383,8 @@ impl<T> Tree<T> {
     ///     node_ids.push(root.append(i).node_id());
     /// }
     ///
-    /// tree.remove(node_ids[1], slab_tree::RemoveBehavior::OrphanChildren);
-    /// tree.remove(node_ids[3], slab_tree::RemoveBehavior::OrphanChildren);
+    /// tree.remove(node_ids[1], nary_tree::RemoveBehavior::OrphanChildren);
+    /// tree.remove(node_ids[3], nary_tree::RemoveBehavior::OrphanChildren);
     ///
     /// tree.shrink_to_fit();
     /// assert!(tree.capacity() >= 3 && tree.capacity() < 10);
@@ -400,7 +400,7 @@ impl<T> Tree<T> {
     /// pointing to the old index.
     ///
     /// ```
-    /// # use slab_tree::*;
+    /// # use nary_tree::*;
     /// let mut tree = TreeBuilder::new().with_root(0).build();
     /// let mut root = tree.root_mut().unwrap();
     /// {
@@ -614,7 +614,7 @@ impl<T: PartialEq> Tree<T> {
     /// Find all the `Node`s that contain data and return a `Some`-Vec of their `NodeId`s
     /// or `None` if none found.
     /// ```
-    /// # use slab_tree::*;
+    /// # use nary_tree::*;
     /// let mut tree = TreeBuilder::new().with_root(0).build();
     /// let mut root = tree.root_mut().unwrap();
     /// {
@@ -674,7 +674,7 @@ impl<T: std::fmt::Display> Tree<T> {
     /// Example:
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(0).build();
     /// let mut root = tree.root_mut().unwrap();
@@ -694,7 +694,7 @@ impl<T: std::fmt::Display> Tree<T> {
     /// Writes nothing if the tree is empty.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let tree = TreeBuilder::<i32>::new().build();
     /// let mut s = String::new();

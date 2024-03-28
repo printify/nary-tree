@@ -1,7 +1,7 @@
 #![forbid(unsafe_code)]
 
 //!
-//! # slab_tree
+//! # nary_tree
 //!
 //! [![Build Status](https://travis-ci.org/iwburns/slab-tree.svg?branch=master)](https://travis-ci.org/iwburns/slab-tree)
 //! [![](https://tokei.rs/b1/github/iwburns/slab-tree)](https://github.com/iwburns/slab-tree)
@@ -31,7 +31,7 @@
 //!
 //! ## Example Usage
 //! ```
-//! use slab_tree::*;
+//! use nary_tree::*;
 //!
 //! //      "hello"
 //! //        / \

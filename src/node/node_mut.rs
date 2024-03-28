@@ -22,7 +22,7 @@ impl<'a, T> NodeMut<'a, T> {
     /// Returns the `NodeId` that identifies this `Node` in the tree.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let root_id = tree.root_id().expect("root doesn't exist?");
@@ -41,7 +41,7 @@ impl<'a, T> NodeMut<'a, T> {
     /// Returns a mutable reference to the data contained by the given `Node`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let mut root = tree.root_mut().expect("root doesn't exist?");
@@ -68,7 +68,7 @@ impl<'a, T> NodeMut<'a, T> {
     /// the `NodeMut` if this `Node` has a parent; otherwise returns a `None`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let mut root = tree.root_mut().expect("root doesn't exist?");
@@ -88,7 +88,7 @@ impl<'a, T> NodeMut<'a, T> {
     /// containing the `NodeMut` if this `Node` has a previous sibling; otherwise returns a `None`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let mut root = tree.root_mut().expect("root doesn't exist?");
@@ -108,7 +108,7 @@ impl<'a, T> NodeMut<'a, T> {
     /// containing the `NodeMut` if this `Node` has a next sibling; otherwise returns a `None`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let mut root = tree.root_mut().expect("root doesn't exist?");
@@ -128,7 +128,7 @@ impl<'a, T> NodeMut<'a, T> {
     /// containing the `NodeMut` if this `Node` has a first child; otherwise returns a `None`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let mut root = tree.root_mut().expect("root doesn't exist?");
@@ -148,7 +148,7 @@ impl<'a, T> NodeMut<'a, T> {
     /// containing the `NodeMut` if this `Node` has a last child; otherwise returns a `None`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let mut root = tree.root_mut().expect("root doesn't exist?");
@@ -168,7 +168,7 @@ impl<'a, T> NodeMut<'a, T> {
     /// Returns a `NodeMut` pointing to the newly added `Node`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let mut root = tree.root_mut().expect("root doesn't exist?");
@@ -228,7 +228,7 @@ impl<'a, T> NodeMut<'a, T> {
     /// Returns a `NodeMut` pointing to the newly added `Node`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let mut root = tree.root_mut().expect("root doesn't exist?");
@@ -276,8 +276,8 @@ impl<'a, T> NodeMut<'a, T> {
     /// `OrphanChildren`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
-    /// use slab_tree::behaviors::RemoveBehavior::*;
+    /// use nary_tree::tree::TreeBuilder;
+    /// use nary_tree::behaviors::RemoveBehavior::*;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let mut root = tree.root_mut().expect("root doesn't exist?");
@@ -313,8 +313,8 @@ impl<'a, T> NodeMut<'a, T> {
     /// `OrphanChildren`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
-    /// use slab_tree::behaviors::RemoveBehavior::*;
+    /// use nary_tree::tree::TreeBuilder;
+    /// use nary_tree::behaviors::RemoveBehavior::*;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let mut root = tree.root_mut().expect("root doesn't exist?");
@@ -345,7 +345,7 @@ impl<'a, T> NodeMut<'a, T> {
     /// Returns a `NodeRef` pointing to this `NodeMut`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let mut root = tree.root_mut().expect("root doesn't exist?");
@@ -366,7 +366,7 @@ impl<'a, T> NodeMut<'a, T> {
     /// already the last sibling.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let two_id = {
@@ -462,7 +462,7 @@ impl<'a, T> NodeMut<'a, T> {
     /// was already the first sibling.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let four_id = {
@@ -557,7 +557,7 @@ impl<'a, T> NodeMut<'a, T> {
     /// Returns false if the node was already the last sibling.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let two_id = {
@@ -641,7 +641,7 @@ impl<'a, T> NodeMut<'a, T> {
     /// Returns false if the node was already the first sibling.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let four_id = {

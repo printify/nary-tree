@@ -1,6 +1,6 @@
-extern crate slab_tree;
+extern crate nary_tree;
 
-use slab_tree::*;
+use nary_tree::*;
 
 fn main() {
     let mut tree = TreeBuilder::new().with_root(0).build();

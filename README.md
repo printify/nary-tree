@@ -1,9 +1,10 @@
-# slab_tree
-
-[![Build Status](https://travis-ci.org/iwburns/slab-tree.svg?branch=master)](https://travis-ci.org/iwburns/slab-tree)
-[![](https://tokei.rs/b1/github/iwburns/slab-tree)](https://github.com/iwburns/slab-tree)
+# nary_tree
 
 A vec-backed tree structure with tree-specific generational indexes.
+
+This is a fork from the slab_tree crate which is no longer maintained.
+At this initial stage, the main difference (aside bug fix) is that the slab layer is now using the
+slab crate from tokio-rs project.
 
 ## Overview
 

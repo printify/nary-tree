@@ -24,7 +24,7 @@ impl<'a, T> NodeRef<'a, T> {
     /// Returns the `NodeId` that identifies this `Node` in the tree.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let root_id = tree.root_id().expect("root doesn't exist?");
@@ -43,7 +43,7 @@ impl<'a, T> NodeRef<'a, T> {
     /// Returns a reference to the data contained by the given `Node`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     ///
@@ -65,7 +65,7 @@ impl<'a, T> NodeRef<'a, T> {
     /// the `NodeRef` if this `Node` has a parent; otherwise returns a `None`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     ///
@@ -86,7 +86,7 @@ impl<'a, T> NodeRef<'a, T> {
     /// containing the `NodeRef` if this `Node` has a previous sibling; otherwise returns a `None`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     ///
@@ -107,7 +107,7 @@ impl<'a, T> NodeRef<'a, T> {
     /// containing the `NodeRef` if this `Node` has a next sibling; otherwise returns a `None`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     ///
@@ -128,7 +128,7 @@ impl<'a, T> NodeRef<'a, T> {
     /// containing the `NodeRef` if this `Node` has a first child; otherwise returns a `None`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     ///
@@ -149,7 +149,7 @@ impl<'a, T> NodeRef<'a, T> {
     /// containing the `NodeRef` if this `Node` has a last child; otherwise returns a `None`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     ///
@@ -170,7 +170,7 @@ impl<'a, T> NodeRef<'a, T> {
     /// returns a `NodeRef` pointing to the current `Node`'s parent.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     ///
@@ -197,7 +197,7 @@ impl<'a, T> NodeRef<'a, T> {
     /// returns a `NodeRef` pointing to the next child of the given `Node`.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     ///
@@ -222,7 +222,7 @@ impl<'a, T> NodeRef<'a, T> {
     /// Depth-first pre-order traversal.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(0i64).build();
     /// let root_id = tree.root().unwrap().node_id();
@@ -241,7 +241,7 @@ impl<'a, T> NodeRef<'a, T> {
     /// Depth-first post-order traversal.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(0i64).build();
     /// let root_id = tree.root().unwrap().node_id();
@@ -260,7 +260,7 @@ impl<'a, T> NodeRef<'a, T> {
     /// Depth-first level-order traversal.
     ///
     /// ```
-    /// use slab_tree::tree::TreeBuilder;
+    /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(0i64).build();
     /// let root_id = tree.root().unwrap().node_id();
