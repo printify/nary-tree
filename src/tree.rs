@@ -287,8 +287,8 @@ impl<T> Tree<T> {
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     /// let two_id = {
     ///     let mut root = tree.root_mut().expect("root doesn't exist?");
-    ///     let two_id = root.append(2).node_id();
-    ///     root.append(3);
+    ///     let two_id = root.append2(2);
+    ///     root.append2(3);
     ///     two_id
     /// };
     ///
@@ -363,7 +363,7 @@ impl<T> Tree<T> {
     /// let mut root = tree.root_mut().unwrap();
     ///
     /// for i in 1..4 {
-    ///     root.append(i);
+    ///     root.append2(i);
     /// }
     ///
     /// tree.shrink_to_fit();
@@ -380,7 +380,7 @@ impl<T> Tree<T> {
     ///
     /// let mut node_ids = vec![root.node_id()];
     /// for i in 1..4 {
-    ///     node_ids.push(root.append(i).node_id());
+    ///     node_ids.push(root.append2(i));
     /// }
     ///
     /// tree.remove(node_ids[1], nary_tree::RemoveBehavior::OrphanChildren);
@@ -617,17 +617,19 @@ impl<T: PartialEq> Tree<T> {
     /// # use nary_tree::*;
     /// let mut tree = TreeBuilder::new().with_root(0).build();
     /// let mut root = tree.root_mut().unwrap();
-    /// {
-    ///     let mut one = root.append(1);
+    /// let mut root = {
+    ///     let one = root.append(1);
     ///     let mut two = one.append(2);
-    ///     two.append(3);
-    ///     two.append(4);
-    /// }
-    /// {
-    ///     let mut five = root.append(5);
-    ///     five.append(6).append(7);
-    ///     five.append(8);
-    /// }
+    ///     two.append2(3);
+    ///     two.append2(4);
+    ///     two.parent().unwrap().parent().unwrap()
+    /// };
+    /// let root = {
+    ///     let five = root.append(5);
+    ///     let mut five = five.append(6).append(7).parent().unwrap().parent().unwrap();
+    ///     five.append2(8);
+    ///     five.parent().unwrap()
+    /// };
     /// root.append(9);
     ///
     /// // 0
@@ -677,10 +679,9 @@ impl<T: std::fmt::Display> Tree<T> {
     /// use nary_tree::tree::TreeBuilder;
     ///
     /// let mut tree = TreeBuilder::new().with_root(0).build();
-    /// let mut root = tree.root_mut().unwrap();
-    /// root.append(1)
-    ///     .append(2);
-    /// root.append(3);
+    /// let root = tree.root_mut().unwrap();
+    /// let mut root = root.append(1).append(2).parent().unwrap().parent().unwrap();
+    /// root.append2(3);
     /// let mut s = String::new();
     /// tree.write_formatted(&mut s).unwrap();
     /// assert_eq!(&s, "\
@@ -877,9 +878,9 @@ mod tree_tests {
         let five_id;
         {
             let mut root = tree.root_mut().expect("root doesn't exist?");
-            two_id = root.append(2).node_id();
-            three_id = root.append(3).node_id();
-            four_id = root.append(4).node_id();
+            two_id = root.append2(2);
+            three_id = root.append2(3);
+            four_id = root.append2(4);
         }
         {
             five_id = tree
@@ -940,9 +941,9 @@ mod tree_tests {
         let five_id;
         {
             let mut root = tree.root_mut().expect("root doesn't exist?");
-            two_id = root.append(2).node_id();
-            three_id = root.append(3).node_id();
-            four_id = root.append(4).node_id();
+            two_id = root.append2(2);
+            three_id = root.append2(3);
+            four_id = root.append2(4);
         }
         {
             five_id = tree
@@ -992,7 +993,7 @@ mod tree_tests {
         let mut tree = TreeBuilder::new().with_root(0).with_capacity(10).build();
         let mut root = tree.root_mut().unwrap();
         for i in 1..4 {
-            root.append(i);
+            root.append2(i);
         }
         tree.shrink_to_fit();
         assert!(tree.capacity() >= 4 && tree.capacity() < 10);
@@ -1004,7 +1005,7 @@ mod tree_tests {
         let mut root = tree.root_mut().unwrap();
         let mut node_ids = vec![root.node_id()];
         for i in 1..4 {
-            node_ids.push(root.append(i).node_id());
+            node_ids.push(root.append2(i));
         }
         tree.remove(node_ids[1], RemoveBehavior::OrphanChildren);
         tree.remove(node_ids[3], RemoveBehavior::OrphanChildren);
@@ -1015,18 +1016,20 @@ mod tree_tests {
     #[test]
     fn find_data() {
         let mut tree = TreeBuilder::new().with_root(0).build();
-        let mut root = tree.root_mut().unwrap();
-        {
-            let mut one = root.append(1);
+        let root = tree.root_mut().unwrap();
+        let root = {
+            let one = root.append(1);
             let mut two = one.append(2);
-            two.append(3);
-            two.append(4);
-        }
-        {
-            let mut five = root.append(5);
-            five.append(6).append(7);
-            five.append(8);
-        }
+            two.append2(3);
+            two.append2(4);
+            two.parent().unwrap().parent().unwrap()
+        };
+        let root = {
+            let five = root.append(5);
+            let mut five = five.append(6).append(7).parent().unwrap().parent().unwrap();
+            five.append2(8);
+            five.parent().unwrap()
+        };
         root.append(9);
 
         // 0
@@ -1048,18 +1051,20 @@ mod tree_tests {
     #[test]
     fn find_removed_data() {
         let mut tree = TreeBuilder::new().with_root(0).build();
-        let mut root = tree.root_mut().unwrap();
-        {
-            let mut one = root.append(1);
+        let root = tree.root_mut().unwrap();
+        let root = {
+            let one = root.append(1);
             let mut two = one.append(2);
-            two.append(3);
-            two.append(4);
-        }
-        {
-            let mut five = root.append(5);
-            five.append(6).append(7);
-            five.append(8);
-        }
+            two.append2(3);
+            two.append2(4);
+            two.parent().unwrap().parent().unwrap()
+        };
+        let root = {
+            let five = root.append(5);
+            let mut five = five.append(6).append(7).parent().unwrap().parent().unwrap();
+            five.append2(8);
+            five.parent().unwrap()
+        };
         root.append(9);
 
         // 0

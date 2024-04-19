@@ -4,19 +4,21 @@ use nary_tree::*;
 
 fn main() {
     let mut tree = TreeBuilder::new().with_root(0).build();
-    let mut root = tree.root_mut().unwrap();
-    {
-        let mut one = root.append(1);
+    let root = tree.root_mut().unwrap();
+    let root = {
+        let one = root.append(1);
         let mut two = one.append(2);
-        two.append(3);
-        two.append(4);
-    }
-    {
-        let mut five = root.append(5);
-        five.append(6).append(7);
-        five.append(8);
-    }
-    root.append(9);
+        two.append2(3);
+        two.append2(4);
+        two.parent().unwrap()
+    };
+    let mut root = {
+        let five = root.append(5);
+        let mut five = five.append(6).append(7).parent().unwrap().parent().unwrap();
+        five.append2(8);
+        five.parent().unwrap()
+    };
+    root.append2(9);
 
     // Find the first node that contains 5 via traverse level order
     let found = root

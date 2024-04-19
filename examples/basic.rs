@@ -13,8 +13,9 @@ fn main() {
 
     let mut tree = TreeBuilder::new().with_root("hello").build();
     let root_id = tree.root_id().expect("root doesn't exist?");
-    let mut hello = tree.get_mut(root_id).unwrap();
+    let hello = tree.get_mut(root_id).unwrap();
 
     hello.append("world");
+    let hello = tree.get_mut(root_id).unwrap();
     hello.append("trees").append("are").append("cool");
 }

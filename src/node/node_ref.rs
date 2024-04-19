@@ -202,9 +202,9 @@ impl<'a, T> NodeRef<'a, T> {
     /// let mut tree = TreeBuilder::new().with_root(1).build();
     ///
     /// let mut root = tree.root_mut().expect("root doesn't exist?");
-    /// root.append(2);
-    /// root.append(3);
-    /// root.append(4);
+    /// root.append2(2);
+    /// root.append2(3);
+    /// root.append2(4);
     ///
     /// let root = root.as_ref();
     ///
@@ -349,7 +349,7 @@ mod node_ref_tests {
         let mut tree = Tree::new();
         tree.set_root(1);
 
-        let mut root_mut = tree.root_mut().expect("root doesn't exist");
+        let root_mut = tree.root_mut().expect("root doesn't exist");
         let node_id = root_mut.append(2).append(3).append(4).append(5).node_id();
 
         let values = [4, 3, 2, 1];
@@ -366,10 +366,10 @@ mod node_ref_tests {
         tree.set_root(1);
 
         let mut root = tree.root_mut().expect("root doesn't exist");
-        root.append(2);
-        root.append(3);
-        root.append(4);
-        root.append(5);
+        root.append2(2);
+        root.append2(3);
+        root.append2(4);
+        root.append2(5);
 
         let values = [2, 3, 4, 5];
         let root = root.as_ref();
