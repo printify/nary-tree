@@ -6,7 +6,7 @@ A vec-backed tree structure with tree-specific generational indexes.
 
 This is a fork from the slab_tree crate which is no longer maintained.
 At this initial stage, the main difference (aside bug fix) is that the slab layer is now using the
-slab crate from tokio-rs project.
+slab crate from the tokio-rs project.
 
 There is currently a new version being developed which will push changes to the crate's interface.
 This will be released under version v0.5, while version v0.4.x will be maintained as LTS for compatibility.
@@ -21,17 +21,17 @@ which are either immutable (`NodeRef`) or mutable (`NodeMut`) instead of handing
 directly. Most tree mutations are achieved by modifying `NodeMut`s instead of talking to the tree
 itself.
 
-`Tree`s in this crate are "just" trees. They do not allow cycles, and they do not allow arbitrary
+The `Tree`s in this crate are "just" trees. They do not allow cycles, and they do not allow arbitrary
 graph structures to be created. Each node in the tree can have an arbitrary number of children, and
 there is no weight associated with edges between the nodes in the tree.
 
 **Please Note:** This crate does not support comparison-based data insertion. In other words, this is
-not a binary search tree (or any other kind of search tree) crate. It is purely a crate for storing
-data in a hierarchical manner. The caller must know the structure that they wish to build and then use
+not a binary search tree (or any other kind of search tree) crate. It is purely a crate for hierarchically storing data.
+The caller must know the structure that they wish to build and then use
 this crate to do so; this library will not make those structural decisions for you.
 
 ## Safety
-This crate uses `#![forbid(unsafe_code)]` to prevent any and all `unsafe` code usage.
+This crate uses `#![forbid(unsafe_code)]` to prevent any `unsafe` code usage.
 
 ## Example Usage
 ```rust
@@ -51,7 +51,7 @@ fn main() {
     let root_id = tree.root_id().expect("root doesn't exist?");
     let mut hello = tree.get_mut(root_id).unwrap();
 
-    hello.append("world");
+    hello.append2("world");
     hello
         .append("trees")
         .append("are")
